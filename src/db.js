@@ -21,7 +21,7 @@ async function openDatabase(uri = process.env.mongoURL || process.env.MONGODB_UR
     if(!existing){
       try{await db.createCollection('registrations',{validator:registrationValidator,validationLevel:'strict'});}
       catch(error){if(error.code!==48)throw error;}
-    }else if(existing.options?.validator?.$jsonSchema?.required?.includes('consent_version') && (!existing.options.validator.$jsonSchema.properties?.dob || !existing.options.validator.$jsonSchema.properties?.age)){
+    }else if(existing.options?.validator?.$jsonSchema?.required?.includes('consent_version') && (!existing.options.validator.$jsonSchema.properties?.dob || !existing.options.validator.$jsonSchema.properties?.age || !existing.options.validator.$jsonSchema.properties?.gender)){
       // Extend this application's older validators without deleting age-only or DOB-only records.
       const schema=structuredClone(registrationValidator.$jsonSchema);
       schema.required=schema.required.filter(key=>!['age','dob'].includes(key));

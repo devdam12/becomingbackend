@@ -93,7 +93,7 @@ function createApp(db, options = {}) {
     const escaped=q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
     const filter = q ? {$or:['full_name','email','school'].map(field=>({[field]:{$regex:escaped,$options:'i'}}))} : {};
     if(date) filter.created_at={$gte:date,$lt:new Date(Date.parse(date)+86400000).toISOString().slice(0,10)};
-    const projection={_id:0,id:1,full_name:1,email:1,whatsapp:1,school:1,created_at:1,status:1};
+    const projection={_id:0,id:1,full_name:1,email:1,whatsapp:1,school:1,gender:1,created_at:1,status:1};
     const [total,filtered,records]=await Promise.all([registrations.countDocuments({}),registrations.countDocuments(filter),registrations.find(filter,{projection}).sort({created_at:-1,id:1}).skip((page-1)*20).limit(20).toArray()]);
     res.json({total,filtered,page,pageSize:20,records});
   });
